@@ -1,0 +1,77 @@
+// This source file has been modified by The TinyMS Authors.
+// Copyright 2021 Huawei Technologies Co., Ltd
+//
+// Copyright 2015, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto3";
+
+package layers;
+
+/*
+Base class for all neural networks.
+
+A Layer could be a single neural network layer, such as conv2d, relu, batch_norm, etc. or a composition of layers to constructing a network.
+*/
+message Layer {
+    map params = 1;
+    map cells = 2;
+    map params_list = 3;
+    map tensor_list = 4;
+    bool training = 5;
+    bool requires_grad = 6;
+    bool pynative = 7;
+    string auto_prefix = 8;
+    string phase = 9;
+    map parameter_layout_dict = 10;
+    bool auto_parallel_mode = 11;
+}
+
+/*
+Sequential layer container.
+
+A list of Layers will be added to it in the order they are passed in the constructor.
+Alternatively, an ordered dict of cells can also be passed in.
+*/
+message SequentialLayer {
+    Layer super_class = 1;
+    repeated Layer layer_list = 2;
+}
+
+/*
+Holds Layers in a list.
+
+LayerList can be used like a regular Python list, support
+'__getitem__', '__setitem__', '__delitem__', '__len__', '__iter__' and '__iadd__',
+but layers it contains are properly registered, and will be visible by all Layer methods.
+*/
+message LayerList {
+    Layer super_class = 1;
+    repeated Layer layer_list = 2;
+}

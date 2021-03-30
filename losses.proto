@@ -1,0 +1,88 @@
+// This source file has been modified by The TinyMS Authors.
+// Copyright 2021 Huawei Technologies Co., Ltd
+//
+// Copyright 2015, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto3";
+
+package losses;
+
+// CrossEntropyWith LabelSmooth.
+message CrossEntropyWithLabelSmooth {
+    OneHot onehot = 1;
+    Tensor on_value =2;
+    Tensor off_value = 3;
+    SoftmaxCrossEntropyWithLogits ce = 4;
+    ReduceMean mean = 5;
+    Cast cast = 6;
+}
+
+// Provide SSD300 training loss through network.
+message SSD300WithLoss {
+    Layer network = 1;
+    Less less = 2;
+    Tile tile = 3;
+    ReduceSum reduce_sum = 4;
+    ReduceMean reduce_mean = 5;
+    ExpandDims expand_dims = 6;
+    SigmoidFocalClassificationLoss class_loss = 7;
+    SmoothL1Loss loc_loss = 8;
+}
+
+// Cycle GAN loss factory.
+message GANLoss {
+    MSELoss loss = 1;
+    OnesLike ones = 2;
+}
+
+// Cycle GAN generator loss.
+message CycleGANGeneratorLoss {
+    float lambda_A = 1;
+    float lambda_B = 2;
+    float lambda_idt = 3;
+    bool use_identity = 4;
+    Layer generator = 5;
+    GANLoss dis_loss = 6;
+    L1Loss rec_loss = 7;
+    Layer D_A = 8;
+    Layer D_B = 9;
+    Tensor true = 10;
+}
+
+// Cycle GAN discriminator loss.
+message CycleGANDiscriminatorLoss {
+    Layer D_A = 1;
+    Layer D_B = 2;
+    Tensor false = 3;
+    Tensor true = 4;
+    GANLoss dis_loss = 5;
+    L1Loss rec_loss = 6;
+    string reduction = 7;
+}

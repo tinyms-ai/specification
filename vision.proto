@@ -1,0 +1,89 @@
+// This source file has been modified by The TinyMS Authors.
+// Copyright 2021 Huawei Technologies Co., Ltd
+//
+// Copyright 2015, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto3";
+
+package vision;
+
+// Base class for all dataset transforms.
+message DatasetTransform {
+    string label = 1;
+    string transform_strategy = 2;
+}
+
+// Mnist dataset transform class.
+message MnistTransform {
+    DatasetTransform super_class = 1;
+    Grayscale grayscale = 2;
+    Resize resize = 3;
+    Rescale normalize = 4;
+    Rescale rescale = 5;
+}
+
+// Cifar10 dataset transform class.
+message Cifar10Transform {
+    DatasetTransform super_class = 1;
+    RandomCrop random_crop = 2;
+    RandomHorizontalFlip random_horizontal_flip = 3;
+
+    Resize resize = 4;
+    Rescale rescale = 5;
+    Normalize normalize = 6;
+}
+
+// ImageFloder dataset transform class.
+message Cifar10Transform {
+    DatasetTransform super_class = 1;
+    RandomCropDecodeResize random_crop_decode_resize = 2;
+    RandomHorizontalFlip random_horizontal_flip = 3;
+
+    CenterCrop center_crop = 4;
+    Normalize normalize = 5;
+}
+
+// VOC dataset transform class.
+message VOCTransform {
+    DatasetTransform super_class = 1;
+    Resize resize = 2;
+    PILRandomHorizontalFlip horizontal_flip = 3;
+    RandomColorAdjust random_color_adjust = 4;
+    Normalize normalize = 5;
+}
+
+// CycleGan dataset transform class.
+message CycleGanDatasetTransform {
+    RandomResizedCrop random_resized_crop = 1;
+    RandomHorizontalFlip random_horizontal_flip = 2;
+
+    Resize resize = 3;
+    Normalize normalize = 4;
+}
